@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solana Profit Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Add for planet icon used in JUP -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+        }
+        .token-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .wallet-card {
+            transition: all 0.3s ease;
+        }
+        .wallet-card:hover {
+            transform: translateX(5px);
+        }
+        .profit {
+            background-color: rgba(20, 241, 149, 0.1);
+            border-left: 4px solid #14F195;
+        }
+        .loss {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid #EF4444;
+        }
+        .chart-container {
+            height: 300px;
+        }
+        @media (max-width: 768px) {
+            .filter-section {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fab fa-solana text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Solana Meme Coin Tracker</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="refresh-btn" class="bg-white text-purple-700 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition">
+                        <i class="fas fa-sync-alt mr-2"></i>Refresh Data
+                    </button>
+                    <button class="text-white hover:text-gray-200">
+                        <i class="fas fa-cog text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Filters Section -->
+        <section class="bg-white rounded-xl shadow-md p-6 mb-8">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">Filter Parameters</h2>
+            
+            <div class="filter-section flex flex-wrap gap-6 mb-6">
+                <!-- Token Filters -->
+                <div class="flex-1 min-w-[300px]">
+                    <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-dog mr-2 text-purple-600"></i>Meme Coin Filters
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Market Cap Min ($)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="e.g. 1000000">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Market Cap Max ($)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="e.g. 10000000">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Meme Coin</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <option value="">All Meme Coins</option>
+                                <option value="BONK">BONK</option>
+                                <option value="WIF">WIF</option>
+                                <option value="MYRO">MYRO</option>
+                                <option value="POPCAT">POPCAT</option>
+                                <option value="WEN">WEN</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Wallet Filters -->
+                <div class="flex-1 min-w-[300px]">
+                    <h3 class="font-semibold text-gray-700 mb-3 flex items-center">
+                        <i class="fas fa-wallet mr-2 text-green-500"></i>Wallet Filters
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Avg Buy Price ($)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ROI Threshold (%)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end">
+                <button class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition flex items-center">
+                    <i class="fas fa-search mr-2"></i> Search Wallets
+                </button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Top Performing Wallets</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">Last updated: Just now</span>
+                    <button class="text-purple-600 hover:text-purple-800">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Total Wallets</p>
+                            <p class="text-2xl font-bold">1,248</p>
+                        </div>
+                        <div class="bg-purple-100 p-3 rounded-full">
+                            <i class="fas fa-wallet text-purple-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Profitable Wallets</p>
+                            <p class="text-2xl font-bold text-green-500">892</p>
+                        </div>
+                        <div class="bg-green-100 p-3 rounded-full">
+                            <i class="fas fa-chart-line text-green-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Avg ROI</p>
+                            <p class="text-2xl font-bold text-green-500">+42.5%</p>
+                        </div>
+                        <div class="bg-blue-100 p-3 rounded-full">
+                            <i class="fas fa-percentage text-blue-600"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow p-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <p class="text-sm text-gray-500">Top Token</p>
+                            <p class="text-2xl font-bold">SOL</p>
+                        </div>
+                        <div class="bg-yellow-100 p-3 rounded-full">
+                            <i class="fas fa-coins text-yellow-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token Tabs -->
+            <div class="bg-white rounded-t-xl shadow-md mb-1">
+                <div class="flex overflow-x-auto" id="token-tabs">
+                    <button data-token="all" class="px-6 py-3 font-medium text-purple-600 border-b-2 border-purple-600">All Meme Coins</button>
+                    <button data-token="BONK" class="px-6 py-3 font-medium text-gray-500 hover:text-purple-600">BONK</button>
+                    <button data-token="WIF" class="px-6 py-3 font-medium text-gray-500 hover:text-purple-600">WIF</button>
+                    <button data-token="MYRO" class="px-6 py-3 font-medium text-gray-500 hover:text-purple-600">MYRO</button>
+                    <button data-token="POPCAT" class="px-6 py-3 font-medium text-gray-500 hover:text-purple-600">POPCAT</button>
+                    <button data-token="WEN" class="px-6 py-3 font-medium text-gray-500 hover:text-purple-600">WEN</button>
+                </div>
+            </div>
+
+            <!-- Wallets Table -->
+            <div class="bg-white rounded-b-xl shadow-md overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wallet Address</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meme Coin</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Buy Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Price</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROI</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PnL</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <!-- Wallet 1 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="7g5Lk9Xy2p">7g5Lk9Xy2p</div>
+                                            <div class="text-sm text-gray-500">Last buy: 2h ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-dog text-orange-500 text-xl"></i>
+                                        <span class="ml-2 font-medium">BONK</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$142.50</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$175.20</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        +22.9%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$5,420</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Wallet 2 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="3hJ9kLm8n">3hJ9kLm8n</div>
+                                            <div class="text-sm text-gray-500">Last buy: 1d ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-hat-cowboy text-yellow-500"></i>
+                                        <span class="ml-2 font-medium">WIF</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.98</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.00</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        +2.0%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$320</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Wallet 3 -->
+                            <tr class="wallet-card loss hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="9kL2mPq4r">9kL2mPq4r</div>
+                                            <div class="text-sm text-gray-500">Last buy: 3d ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-dog text-blue-500"></i>
+                                        <span class="ml-2 font-medium">MYRO</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.000024</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.000018</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        -25.0%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">-$1,250</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+                            
+                            <!-- Wallet 4 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="5tR7vWz1q">5tR7vWz1q</div>
+                                            <div class="text-sm text-gray-500">Last buy: 6h ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-cat text-red-500"></i>
+                                        <span class="ml-2 font-medium">POPCAT</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.75</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.10</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        +46.7%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$8,750</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+                    <div class="flex-1 flex justify-between sm:hidden">
+                        <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Previous
+                        </button>
+                        <button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                            Next
+                        </button>
+                    </div>
+                    <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">1248</span> results
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Previous</span>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button aria-current="page" class="z-10 bg-purple-50 border-purple-500 text-purple-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    1
+                                </button>
+                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    2
+                                </button>
+                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    3
+                                </button>
+                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
+                                    ...
+                                </span>
+                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+                                    8
+                                </button>
+                                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                    <span class="sr-only">Next</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Token Insights Section -->
+        <section class="mt-12">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">Token Insights</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Top Token Card -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden token-card transition">
+                    <div class="p-6">
+                        <div class="flex items-center mb-4">
+                            <img src="https://cryptologos.cc/logos/solana-sol-logo.png" alt="SOL" class="h-10 w-10 rounded-full">
+                            <div class="ml-4">
+                                <h3 class="text-lg font-bold">Solana (SOL)</h3>
+                                <p class="text-sm text-gray-500">Most traded token</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-sm text-gray-500">Current Price</p>
+                                <p class="font-bold">$175.20</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">24h Change</p>
+                                <p class="font-bold text-green-500">+5.2%</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <!-- Placeholder for chart -->
+                            <div class="bg-gray-100 rounded-lg h-full flex items-center justify-center">
+                                <i class="fas fa-chart-area text-3xl text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ROI Distribution Card -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden token-card transition">
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-chart-pie text-purple-600 mr-2"></i> ROI Distribution
+                        </h3>
+                        <div class="mb-4">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-green-500">Profitable (71%)</span>
+                                <span class="text-red-500">Loss (29%)</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-gradient-to-r from-green-400 to-red-500 h-2.5 rounded-full" style="width: 71%"></div>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <!-- Placeholder for pie chart -->
+                            <div class="bg-gray-100 rounded-lg h-full flex items-center justify-center">
+                                <i class="fas fa-chart-pie text-3xl text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Top Performing Wallet Card -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden token-card transition">
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold mb-4 flex items-center">
+                            <i class="fas fa-trophy text-yellow-500 mr-2"></i> Top Performer
+                        </h3>
+                        <div class="flex items-center mb-4">
+                            <div class="flex-shrink-0 h-12 w-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-wallet text-purple-600 text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="font-medium">8vN3...Kj9L</h4>
+                                <p class="text-sm text-gray-500">JUP trader</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div>
+                                <p class="text-sm text-gray-500">ROI</p>
+                                <p class="font-bold text-green-500">+312%</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Profit</p>
+                                <p class="font-bold">$42,850</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Avg Hold Time</p>
+                                <p class="font-bold">3.2 days</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fab fa-solana mr-2"></i> Solana Profit Tracker
+                    </h3>
+                    <p class="text-gray-400 text-sm">Track profitable Solana wallets trading meme coins and find the next big meme play.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Documentation</a></li>
+                        <li><a href="#" class="hover:text-white">API Status</a></li>
+                        <li><a href="#" class="hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Community</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Twitter</a></li>
+                        <li><a href="#" class="hover:text-white">Discord</a></li>
+                        <li><a href="#" class="hover:text-white">Telegram</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Subscribe</h4>
+                    <p class="text-gray-400 text-sm mb-2">Get the latest updates on profitable wallets.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email" class="px-3 py-2 bg-gray-700 text-white rounded-l-lg focus:outline-none w-full">
+                        <button class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-r-lg">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-sm text-gray-400 text-center">
+                <p>© 2023 Solana Profit Tracker. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const searchBtn = document.querySelector('.gradient-bg.text-white');
+            const tokenTabs = document.getElementById('token-tabs');
+            const walletAddresses = document.querySelectorAll('.wallet-address');
+            const paginationButtons = document.querySelectorAll('[aria-label="Pagination"] button');
+            
+            // Token tab switching
+            tokenTabs.addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    const token = e.target.dataset.token;
+                    // Remove active class from all buttons
+                    tokenTabs.querySelectorAll('button').forEach(btn => {
+                        btn.classList.remove('text-purple-600', 'border-purple-600');
+                        btn.classList.add('text-gray-500');
+                    });
+                    // Add active class to clicked button
+                    e.target.classList.add('text-purple-600', 'border-purple-600');
+                    e.target.classList.remove('text-gray-500');
+                    
+                    // Filter wallets by token
+                    const walletRows = document.querySelectorAll('.wallet-card');
+                    walletRows.forEach(row => {
+                        const rowToken = row.querySelector('td span.ml-2').textContent;
+                        if (token === 'all' || rowToken === token) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    Toastify({
+                        text: `Showing wallets for ${token === 'all' ? 'all tokens' : token}`,
+                        duration: 2000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#9945FF",
+                    }).showToast();
+                }
+            });
+
+            // Copy wallet address on click
+            walletAddresses.forEach(address => {
+                address.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const fullAddress = this.dataset.address;
+                    navigator.clipboard.writeText(fullAddress).then(() => {
+                        Toastify({
+                            text: "Wallet address copied!",
+                            duration: 2000,
+                            close: true,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#9945FF",
+                        }).showToast();
+                    });
+                });
+            });
+
+            // Pagination functionality
+            paginationButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!this.classList.contains('z-10') && !this.classList.contains('disabled')) {
+                        // Remove active class from all buttons
+                        paginationButtons.forEach(btn => {
+                            btn.classList.remove('z-10', 'bg-purple-50', 'border-purple-500', 'text-purple-600');
+                        });
+                        
+                        // Add active class to clicked button if it's a page number
+                        if (!isNaN(parseInt(this.textContent))) {
+                            this.classList.add('z-10', 'bg-purple-50', 'border-purple-500', 'text-purple-600');
+                        }
+                        
+                        // Simulate pagination loading
+                        loadingSpinner.classList.remove('hidden');
+                        
+                        setTimeout(() => {
+                            loadingSpinner.classList.add('hidden');
+                            Toastify({
+                                text: `Loaded page ${this.textContent}`,
+                                duration: 2000,
+                                close: true,
+                                gravity: "top",
+                                position: "right",
+                                backgroundColor: "#9945FF",
+                            }).showToast();
+                        }, 800);
+                    }
+                });
+            });
+            const refreshBtn = document.getElementById('refresh-btn');
+            const walletRows = document.querySelectorAll('.wallet-card');
+            const chartBtns = document.querySelectorAll('.fa-chart-line');
+            const extBtns = document.querySelectorAll('.fa-external-link-alt');
+            const loadingSpinner = document.createElement('div');
+            
+            // Create loading spinner
+            loadingSpinner.innerHTML = '<i class="fas fa-spinner fa-spin text-white text-xl"></i>';
+            loadingSpinner.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden';
+            document.body.appendChild(loadingSpinner);
+
+            // Simulate API call
+            function fetchData() {
+                loadingSpinner.classList.remove('hidden');
+                
+                // Simulate API delay
+                setTimeout(() => {
+                    loadingSpinner.classList.add('hidden');
+                    
+                    // Update "Last updated" time
+                    const now = new Date();
+                    document.querySelector('.text-sm.text-gray-600').textContent = 
+                        `Last updated: ${now.toLocaleTimeString()}`;
+                    
+                    // Show success toast
+                    Toastify({
+                        text: "Data refreshed successfully!",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#14F195",
+                    }).showToast();
+                }, 1500);
+            }
+
+            // Search functionality
+            searchBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const marketCapMin = document.querySelector('input[placeholder="Market Cap Min ($)"]').value;
+                const marketCapMax = document.querySelector('input[placeholder="Market Cap Max ($)"]').value;
+                const roiThreshold = document.querySelector('input[placeholder="ROI Threshold (%)"]').value;
+                const startDate = document.querySelectorAll('input[type="date"]')[0].value;
+                const endDate = document.querySelectorAll('input[type="date"]')[1].value;
+                const selectedToken = document.querySelector('select').value;
+                
+                // Validate inputs
+                if (marketCapMin && marketCapMax && parseFloat(marketCapMin) > parseFloat(marketCapMax)) {
+                    Toastify({
+                        text: "Max market cap must be greater than min",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#EF4444",
+                    }).showToast();
+                    return;
+                }
+                
+                // Show loading
+                loadingSpinner.classList.remove('hidden');
+                
+                // Simulate API call with filtering
+                setTimeout(() => {
+                    loadingSpinner.classList.add('hidden');
+                    
+                    // Filter wallets based on criteria
+                    const walletRows = document.querySelectorAll('.wallet-card');
+                    let matchedCount = 0;
+                    
+                    walletRows.forEach(row => {
+                        const rowToken = row.querySelector('td span.ml-2').textContent;
+                        const roiText = row.querySelector('td span').textContent;
+                        const roiValue = parseFloat(roiText.replace(/[+%]/g, ''));
+                        
+                        // Apply filters
+                        const tokenMatch = !selectedToken || selectedToken === '' || rowToken === selectedToken;
+                        const roiMatch = !roiThreshold || Math.abs(roiValue) >= parseFloat(roiThreshold);
+                        
+                        if (tokenMatch && roiMatch) {
+                            row.style.display = '';
+                            matchedCount++;
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                    
+                    Toastify({
+                        text: `Found ${matchedCount} wallets matching your criteria`,
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: matchedCount > 0 ? "#14F195" : "#EF4444",
+                    }).showToast();
+                }, 1500);
+            });
+
+            // Refresh button
+            refreshBtn.addEventListener('click', fetchData);
+
+            // Table row click - show details
+            walletRows.forEach(row => {
+                row.addEventListener('click', function() {
+                    const address = this.querySelector('td div.text-sm.font-medium').textContent;
+                    const token = this.querySelector('td span.ml-2').textContent;
+                    const roi = this.querySelector('td span.bg-green-100').textContent;
+                    
+                    Swal.fire({
+                        title: `${token} Wallet Details`,
+                        html: `
+                            <div class="text-left">
+                                <p><strong>Address:</strong> ${address}</p>
+                                <p><strong>Token:</strong> ${token}</p>
+                                <p><strong>ROI:</strong> ${roi}</p>
+                                <p><strong>Last Buy:</strong> ${this.querySelector('td div.text-sm.text-gray-500').textContent.replace('Last buy: ', '')}</p>
+                            </div>
+                        `,
+                        icon: 'info',
+                        confirmButtonColor: '#9945FF',
+                    });
+                });
+            });
+
+            // Chart buttons
+            chartBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    Toastify({
+                        text: "Loading trading history chart...",
+                        duration: 2000,
+                        close: true,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: "#9945FF",
+                    }).showToast();
+                });
+            });
+
+            // External link buttons
+            extBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    window.open('https://solscan.io/', '_blank');
+                });
+            });
+        });
+    </script>
+    <!-- Add Toastify for notifications -->
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Add SweetAlert for modals -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=shahaf564/walletfinder" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
