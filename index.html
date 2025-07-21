@@ -77,16 +77,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Market Cap Min ($)</label>
-                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="e.g. 1000000">
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" id="market-cap-min" placeholder="e.g. 1000000">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Market Cap Max ($)</label>
-                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" placeholder="e.g. 10000000">
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500" id="market-cap-max" placeholder="e.g. 10000000">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Meme Coin</label>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                            <select id="token-select" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                                 <option value="">All Meme Coins</option>
                                 <option value="BONK">BONK</option>
                                 <option value="WIF">WIF</option>
@@ -111,17 +111,17 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ROI Threshold (%)</label>
-                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <input id="roi-threshold" type="number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <input id="start-date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-                                <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
+                                <input id="end-date" type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500">
                             </div>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
             </div>
             
             <div class="flex justify-end">
-                <button class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition flex items-center">
+                <button id="search-wallets" class="gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition flex items-center">
                     <i class="fas fa-search mr-2"></i> Search Wallets
                 </button>
             </div>
@@ -231,7 +231,7 @@
                                             <i class="fas fa-wallet text-purple-600"></i>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="7g5Lk9Xy2p">7g5Lk9Xy2p</div>
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="7g5Lk9Xy2pAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">7g5Lk9Xy2pAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>
                                             <div class="text-sm text-gray-500">Last buy: 2h ago</div>
                                         </div>
                                     </div>
@@ -264,7 +264,7 @@
                                             <i class="fas fa-wallet text-purple-600"></i>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="3hJ9kLm8n">3hJ9kLm8n</div>
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="3hJ9kLm8nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB">3hJ9kLm8nBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB</div>
                                             <div class="text-sm text-gray-500">Last buy: 1d ago</div>
                                         </div>
                                     </div>
@@ -297,7 +297,7 @@
                                             <i class="fas fa-wallet text-purple-600"></i>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="9kL2mPq4r">9kL2mPq4r</div>
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="9kL2mPq4rCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC">9kL2mPq4rCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC</div>
                                             <div class="text-sm text-gray-500">Last buy: 3d ago</div>
                                         </div>
                                     </div>
@@ -330,7 +330,7 @@
                                             <i class="fas fa-wallet text-purple-600"></i>
                                         </div>
                                         <div class="ml-4">
-                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="5tR7vWz1q">5tR7vWz1q</div>
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="5tR7vWz1qDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD">5tR7vWz1qDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD</div>
                                             <div class="text-sm text-gray-500">Last buy: 6h ago</div>
                                         </div>
                                     </div>
@@ -354,6 +354,130 @@
                                     <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
                                 </td>
                             </tr>
+
+                            <!-- Wallet 5 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="Addr5XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">Addr5XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+                                            <div class="text-sm text-gray-500">Last buy: 4h ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-dog text-orange-500 text-xl"></i>
+                                        <span class="ml-2 font-medium">BONK</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.05</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.25</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">+19.0%</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$1,250</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+
+                            <!-- Wallet 6 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="Addr6XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">Addr6XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+                                            <div class="text-sm text-gray-500">Last buy: 2d ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-hat-cowboy text-yellow-500"></i>
+                                        <span class="ml-2 font-medium">WIF</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.95</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.10</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">+15.8%</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$980</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+
+                            <!-- Wallet 7 -->
+                            <tr class="wallet-card loss hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="Addr7XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">Addr7XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+                                            <div class="text-sm text-gray-500">Last buy: 5d ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-dog text-blue-500"></i>
+                                        <span class="ml-2 font-medium">MYRO</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.000021</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.000017</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">-19.0%</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-red-600">-$800</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
+
+                            <!-- Wallet 8 -->
+                            <tr class="wallet-card profit hover:bg-gray-50 cursor-pointer">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <i class="fas fa-wallet text-purple-600"></i>
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900 cursor-pointer wallet-address" data-address="Addr8XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">Addr8XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+                                            <div class="text-sm text-gray-500">Last buy: 7h ago</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-cat text-red-500"></i>
+                                        <span class="ml-2 font-medium">POPCAT</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$0.80</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">$1.15</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">+43.7%</span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-600">+$4,250</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <button class="text-purple-600 hover:text-purple-900 mr-3"><i class="fas fa-chart-line"></i></button>
+                                    <button class="text-blue-600 hover:text-blue-900"><i class="fas fa-external-link-alt"></i></button>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -370,32 +494,18 @@
                     </div>
                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
-                            <p class="text-sm text-gray-700">
-                                Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">1248</span> results
+                            <p id="pagination-info" class="text-sm text-gray-700">
+                                Showing <span class="font-medium">1</span> to <span class="font-medium">4</span> of <span class="font-medium">8</span> results
                             </p>
                         </div>
                         <div>
                             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <button id="prev-page" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                     <span class="sr-only">Previous</span>
                                     <i class="fas fa-chevron-left"></i>
                                 </button>
-                                <button aria-current="page" class="z-10 bg-purple-50 border-purple-500 text-purple-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    1
-                                </button>
-                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    2
-                                </button>
-                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    3
-                                </button>
-                                <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                                    ...
-                                </span>
-                                <button class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium">
-                                    8
-                                </button>
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                <span id="page-numbers"></span>
+                                <button id="next-page" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                     <span class="sr-only">Next</span>
                                     <i class="fas fa-chevron-right"></i>
                                 </button>
@@ -474,7 +584,7 @@
                                 <i class="fas fa-wallet text-purple-600 text-xl"></i>
                             </div>
                             <div class="ml-4">
-                                <h4 class="font-medium">8vN3...Kj9L</h4>
+                                <h4 class="font-medium wallet-address" data-address="8vN3Kj9L123456789ABCDEFGHJKLmnopqrstuvwxyz">8vN3Kj9L123456789ABCDEFGHJKLmnopqrstuvwxyz</h4>
                                 <p class="text-sm text-gray-500">JUP trader</p>
                             </div>
                         </div>
@@ -544,26 +654,54 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // DOM elements
-            const searchBtn = document.querySelector('.gradient-bg.text-white');
+            const searchBtn = document.getElementById('search-wallets');
             const tokenTabs = document.getElementById('token-tabs');
             const walletAddresses = document.querySelectorAll('.wallet-address');
-            const paginationButtons = document.querySelectorAll('[aria-label="Pagination"] button');
-            
-            // Token tab switching
-            tokenTabs.addEventListener('click', function(e) {
-                if (e.target.tagName === 'BUTTON') {
+            const prevBtn = document.getElementById("prev-page");
+            const nextBtn = document.getElementById("next-page");
+            const pageNumbersContainer = document.getElementById("page-numbers");
+            let totalPages = 1;
+            const walletRows = Array.from(document.querySelectorAll('.wallet-card'));
+            const rowsPerPage = 4;
+            let currentPage = 1;
+
+function renderPage(page) {
+                const visibleRows = walletRows.filter(row => row.style.display !== 'none');
+                totalPages = Math.ceil(visibleRows.length / rowsPerPage) || 1;
+                if (page > totalPages) page = totalPages;
+                currentPage = page;
+                visibleRows.forEach((row, idx) => {
+                    row.style.display = idx >= (page - 1) * rowsPerPage && idx < page * rowsPerPage ? '' : 'none';
+                });
+                const start = (page - 1) * rowsPerPage + 1;
+                const end = Math.min(page * rowsPerPage, visibleRows.length);
+                paginationInfo.innerHTML = `Showing <span class="font-medium">${start}</span> to <span class="font-medium">${end}</span> of <span class="font-medium">${visibleRows.length}</span> results`;
+                pageNumbersContainer.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const btn = document.createElement('button');
+                    btn.textContent = i;
+                    btn.className = 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium';
+                    if (i === currentPage) btn.classList.add('z-10','bg-purple-50','border-purple-500','text-purple-600');
+                    btn.addEventListener('click', () => renderPage(i));
+                    pageNumbersContainer.appendChild(btn);
+                }
+                prevBtn.classList.toggle('opacity-50', currentPage === 1);
+                prevBtn.classList.toggle('cursor-not-allowed', currentPage === 1);
+                nextBtn.classList.toggle('opacity-50', currentPage === totalPages);
+                nextBtn.classList.toggle('cursor-not-allowed', currentPage === totalPages);
+            }
+            renderPage(1);
+            tokenTabs.addEventListener("click", function(e) {
+                if (e.target.tagName === "BUTTON") {
                     const token = e.target.dataset.token;
-                    // Remove active class from all buttons
-                    tokenTabs.querySelectorAll('button').forEach(btn => {
-                        btn.classList.remove('text-purple-600', 'border-purple-600');
-                        btn.classList.add('text-gray-500');
+                    tokenTabs.querySelectorAll("button").forEach(btn => {
+                        btn.classList.remove("text-purple-600", "border-purple-600");
+                        btn.classList.add("text-gray-500");
                     });
-                    // Add active class to clicked button
-                    e.target.classList.add('text-purple-600', 'border-purple-600');
-                    e.target.classList.remove('text-gray-500');
+                    e.target.classList.add("text-purple-600", "border-purple-600");
+                    e.target.classList.remove("text-gray-500");
                     
                     // Filter wallets by token
-                    const walletRows = document.querySelectorAll('.wallet-card');
                     walletRows.forEach(row => {
                         const rowToken = row.querySelector('td span.ml-2').textContent;
                         if (token === 'all' || rowToken === token) {
@@ -581,6 +719,7 @@
                         position: "right",
                         backgroundColor: "#9945FF",
                     }).showToast();
+                    renderPage(1);
                 }
             });
 
@@ -601,41 +740,15 @@
                     });
                 });
             });
-
-            // Pagination functionality
-            paginationButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (!this.classList.contains('z-10') && !this.classList.contains('disabled')) {
-                        // Remove active class from all buttons
-                        paginationButtons.forEach(btn => {
-                            btn.classList.remove('z-10', 'bg-purple-50', 'border-purple-500', 'text-purple-600');
-                        });
-                        
-                        // Add active class to clicked button if it's a page number
-                        if (!isNaN(parseInt(this.textContent))) {
-                            this.classList.add('z-10', 'bg-purple-50', 'border-purple-500', 'text-purple-600');
-                        }
-                        
-                        // Simulate pagination loading
-                        loadingSpinner.classList.remove('hidden');
-                        
-                        setTimeout(() => {
-                            loadingSpinner.classList.add('hidden');
-                            Toastify({
-                                text: `Loaded page ${this.textContent}`,
-                                duration: 2000,
-                                close: true,
-                                gravity: "top",
-                                position: "right",
-                                backgroundColor: "#9945FF",
-                            }).showToast();
-                        }, 800);
-                    }
-                });
+            prevBtn.addEventListener("click", e => {
+                e.preventDefault();
+                if (currentPage > 1) renderPage(currentPage - 1);
+            });
+            nextBtn.addEventListener("click", e => {
+                e.preventDefault();
+                if (currentPage < totalPages) renderPage(currentPage + 1);
             });
             const refreshBtn = document.getElementById('refresh-btn');
-            const walletRows = document.querySelectorAll('.wallet-card');
             const chartBtns = document.querySelectorAll('.fa-chart-line');
             const extBtns = document.querySelectorAll('.fa-external-link-alt');
             const loadingSpinner = document.createElement('div');
@@ -673,12 +786,12 @@
             // Search functionality
             searchBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const marketCapMin = document.querySelector('input[placeholder="Market Cap Min ($)"]').value;
-                const marketCapMax = document.querySelector('input[placeholder="Market Cap Max ($)"]').value;
-                const roiThreshold = document.querySelector('input[placeholder="ROI Threshold (%)"]').value;
-                const startDate = document.querySelectorAll('input[type="date"]')[0].value;
-                const endDate = document.querySelectorAll('input[type="date"]')[1].value;
-                const selectedToken = document.querySelector('select').value;
+                const marketCapMin = document.getElementById("market-cap-min").value;
+                const marketCapMax = document.getElementById("market-cap-max").value;
+                const roiThreshold = document.getElementById('roi-threshold').value;
+                const startDate = document.getElementById("start-date").value;
+                const endDate = document.getElementById("end-date").value;
+                const selectedToken = document.getElementById('token-select').value;
                 
                 // Validate inputs
                 if (marketCapMin && marketCapMax && parseFloat(marketCapMin) > parseFloat(marketCapMax)) {
@@ -701,7 +814,6 @@
                     loadingSpinner.classList.add('hidden');
                     
                     // Filter wallets based on criteria
-                    const walletRows = document.querySelectorAll('.wallet-card');
                     let matchedCount = 0;
                     
                     walletRows.forEach(row => {
@@ -721,6 +833,7 @@
                         }
                     });
                     
+                    renderPage(1);
                     Toastify({
                         text: `Found ${matchedCount} wallets matching your criteria`,
                         duration: 3000,
