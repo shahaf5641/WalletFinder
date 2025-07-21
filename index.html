@@ -400,10 +400,11 @@
             // DOM elements
             const searchBtn = document.getElementById('search-wallets');
             const tokenTabs = document.getElementById('token-tabs');
+            const paginationInfo = document.getElementById('pagination-info');
             let walletAddresses = [];
-            const prevBtn = document.getElementById("prev-page");
-            const nextBtn = document.getElementById("next-page");
-            const pageNumbersContainer = document.getElementById("page-numbers");
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            const pageNumbersContainer = document.getElementById('page-numbers');
             let totalPages = 1;
             let walletRows = [];
             let walletData = [];
@@ -411,6 +412,14 @@
             let extBtns = [];
             const rowsPerPage = 4;
             let currentPage = 1;
+
+            const sampleData = [
+                { address: 'J1gq4Hgb8vN3Kj9L123456789ABCDEFGH1', token: 'BONK', avgBuy: 0.0001, current: 0.00012, roi: 20, pnl: '$120', lastBuy: '2h ago' },
+                { address: '9Hs7bGbb7eFa9kL23456789ABCDEFGH2', token: 'WIF',  avgBuy: 0.012, current: 0.013, roi: 8,  pnl: '$85',  lastBuy: '1h ago' },
+                { address: 'Dfs8nKm27Gj9LqB3456789ABCDEFGH3',  token: 'MYRO', avgBuy: 0.0015, current: 0.0021, roi: 40, pnl: '$640', lastBuy: '5h ago' },
+                { address: 'Po9fLm123sdf89ABCDEFGHJKLmn4564', token: 'POPCAT', avgBuy: 0.0008, current: 0.0006, roi: -25, pnl: '$-75', lastBuy: '3h ago' },
+                { address: 'Aq8s9Km7Gh6d5Fg4rE3w2q1P23456789', token: 'WEN', avgBuy: 0.00003, current: 0.000031, roi: 3, pnl: '$15', lastBuy: '7h ago' }
+            ];
 
             function tokenIcon(token) {
                 const map = {
@@ -462,7 +471,8 @@
                 extBtns.forEach(btn => {
                     btn.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        window.open('https://solscan.io/', '_blank');
+                        const addr = this.closest('tr').querySelector('.wallet-address').dataset.address;
+                        window.open(`https://solscan.io/account/${addr}`, '_blank');
                     });
                 });
             }
@@ -513,21 +523,22 @@
                     const res = await fetch(url);
                     const json = await res.json();
                     walletData = json.results || [];
-                    renderWallets(walletData);
-                    renderPage(1);
-                    const now = new Date();
-                    document.querySelector('.text-sm.text-gray-600').textContent = `Last updated: ${now.toLocaleTimeString()}`;
                 } catch (err) {
                     console.error(err);
+                    walletData = sampleData;
                     Toastify({
-                        text: 'Failed to load data',
+                        text: 'Using fallback data',
                         duration: 3000,
                         close: true,
                         gravity: 'top',
                         position: 'right',
-                        backgroundColor: '#EF4444',
+                        backgroundColor: '#FBBF24',
                     }).showToast();
                 } finally {
+                    renderWallets(walletData);
+                    renderPage(1);
+                    const now = new Date();
+                    document.querySelector('.text-sm.text-gray-600').textContent = `Last updated: ${now.toLocaleTimeString()}`;
                     loadingSpinner.classList.add('hidden');
                 }
             }
